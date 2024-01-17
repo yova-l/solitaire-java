@@ -1,0 +1,39 @@
+#mainWindowS {
+    -fx-background-color: green;
+    -fx-spacing: -300;
+}
+
+#box-pilajuegos {
+    -fx-spacing: 30;
+    -fx-translate-y: 10;
+}
+
+.pila-juego {
+    -fx-spacing: -100;
+}
+
+.pila-juego-vacia {
+    -fx-min-width: 96px;
+    -fx-max-height: 144px;
+    -fx-padding: 3px;
+    -fx-background-color: #36622d;
+    -fx-border-radius: 3;
+    -fx-border-color: white;
+    -fx-border-width: 5;
+}
+
+#leftbar {
+    -fx-padding: 1em;
+}
+
+#refreshing {
+    -fx-scale-x: 25%;
+    -fx-scale-y: 25%;
+    -fx-translate-y: -150;
+    -fx-translate-x: -200;
+}
+
+#refreshing:hover {
+    -fx-scale-y: 27%;
+    -fx-scale-x: 27%;
+}

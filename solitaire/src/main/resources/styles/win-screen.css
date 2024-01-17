@@ -1,0 +1,15 @@
+#window {
+    -fx-background-color:  #fdd43e;
+    -fx-alignment: center;
+}
+
+#titulo {
+    -fx-font-size: 150px;
+    -fx-font-family: FreeMono;
+    -fx-text-fill: #fdd43e;
+    -fx-border-radius: 5;
+    -fx-border-width: 5;
+    -fx-border-color: #fdd43e;
+    -fx-padding: 100;
+    -fx-background-color: aliceblue;
+}

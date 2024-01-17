@@ -1,0 +1,154 @@
+@startuml
+!theme vibrant
+
+skin rose
+
+title TP - Solitario
+
+class EstadoKlondike {}
+EstadoKlondike --|> Estado
+
+class EstadoSpider {}
+EstadoSpider --|> Estado
+
+abstract Estado {
+  -List<CardsStack> pilaCartas
+  +actualizarEstado(Movimiento)
+  +esPartidaGanada(): boolean
+  +generarDescripcion(): List<List<String>>
+  +serializar(OutputStream)
+  +static deserializar(InputStream): Estado
+}
+
+class InicializadorPartidaKlondike {
+  -EstadoKlondike
+  <<Create>> construir(List<List<String>>)
+  <<Create>> construir(int semilla)
+  +obtenerEstado(): EstadoKlondike
+}
+InicializadorPartidaKlondike  ..> MazoCartas
+InicializadorPartidaKlondike ..> FabricaPilas
+InicializadorPartidaKlondike ..> FabricaPilasEstado
+InicializadorPartidaKlondike ..> Parsers
+
+class InicializadorPartidaSpider {
+  -EstadoSpider
+  <<Create>> construir(List<List<String>>)
+  <<Create>> construir(int semilla)
+  +obtenerEstado(): EstadoKlondike
+}
+InicializadorPartidaSpider  ..> MazoCartas
+InicializadorPartidaSpider ..> FabricaPilas
+InicializadorPartidaSpider ..> FabricaPilasEstado
+InicializadorPartidaSpider ..> Parsers
+
+abstract JuegoSolitario {
+  <<Create>> construir(Estado)
+  +hacerMovimiento(Movimiento)
+  +getEstado(): Estado
+  +juegoGanado(): boolean
+}
+
+class JuegoKlondike {}
+class JuegoSpider {}
+JuegoKlondike --|> JuegoSolitario
+JuegoSpider --|> JuegoSolitario
+
+class MazoCartas {
+  +<<Create>> construir(int seed, int cantCards, bool mismoPalo)
+  +obtenerCartas(int cantidad): List<Card>
+}
+MazoCartas ..> FabricaCartas
+
+
+interface Descriptable {
+  +generarDescripcion(): String
+}
+
+interface Card {
+  +verNum(): enum numCarta
+  +verColor(): enum Color
+  +verPalo(): enum palo
+  +estaOculta(): boolean
+  +voltear()
+}
+Card --|> Descriptable
+
+class Carta {}
+Carta ..|> Card
+
+interface CardsStack {
+  +obtenerCascada(): List<Carta>
+  +AppendearCascada(List<Carta>)
+  +estaVacia(): boolean
+  +generarDescripcion(): List<String>
+}
+CardsStack ..> Parsers
+
+class FabricaCartas {
+  +generarCarta(String descripcion): Card
+}
+FabricaCartas ..> Carta
+
+class FabricaPilas {
+  <<Create>> construir(MazoCartas)
+  +crearPilas(...): List<CardsStack>
+  +crearPilas(...): List<CardsStack>
+}
+FabricaPilas ..> CardsStack
+
+class FabricaPilasEstado {
+  +crearPilas(...): List<CardsStack>
+}
+FabricaPilasEstado ..> CardsStack
+
+class GameSaver {
+  +saveEstado(Estado, String path)
+  +loadEstado(String path): Estado
+}
+
+class Movimiento {
+  -enum ZonaSolitario origen
+  -enum ZonaSolitario destino
+  -Card cartaOrigen
+  -Card cartaDestino
+  -boolean esCascada
+  -int posOrigen
+  -int posDestino
+  +getters()
+}
+
+class Parsers {
+  +static generarDescripcion(List<Descriptable>, List<String> res): res
+  +static generarArrCards(List<List<String>> descripList, List<List<Card>> res): res
+}
+Parsers ..> FabricaCartas
+
+interface PilaJuegoSolitario {
+  +getListaOcultas(): List<Card>
+  +getListaVisibles(): List<Card> 
+  +getListaCompleta(): List<Card> 
+}
+PilaJuegoSolitario --|> CardsStack
+
+class PilaPozo {
+  -List<Carta>
+  <<Create>> construir(List<Carta>)
+}
+PilaPozo ..|> CardsStack
+
+class PilaSimple {
+  -List<Carta>
+  <<Create>> construir(List<Carta>)
+}
+PilaSimple ..|> CardsStack
+
+class PilaJuego {
+  -List<Carta> pilaOcultas
+  -List<Carta> pilaVisibles
+  <<Create>> construir(List<Carta> cartasMazo, int cantidadAEsconder)
+  <<Create>> construir(List<Carta> cartasMazo)
+}
+PilaJuego ..|> PilaJuegoSolitario
+
+@enduml
